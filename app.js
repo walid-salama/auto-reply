@@ -44,7 +44,8 @@ let PASS = store.get('pass');
 async function api(path, method = 'GET', body) {
   const res = await fetch(SERVER + '/api' + path, {
     method,
-    headers: { 'x-admin-password': PASS, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    // كلمة السر بتتشفر عشان لو فيها حروف عربي (المتصفح مش بيبعت عربي في الـ headers)
+    headers: { 'x-admin-password': encodeURIComponent(PASS), ...(body ? { 'Content-Type': 'application/json' } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
